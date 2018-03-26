@@ -1,0 +1,11 @@
+﻿@using AdminClient.Controllers;
+@model ImpersonateViewModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+<div>
+    <form asp-controller="Home" asp-action="Impersonate" method="post">
+        Account:  <input asp-for="Account" /> <br />
+        <button type="submit">Impersonate</button>
+    </form>
+</div>
