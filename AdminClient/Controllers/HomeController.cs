@@ -44,12 +44,13 @@ namespace AdminClient.Controllers
                 RedirectUri = "http://localhost:5003",
                 Items =
                     {
-                        { "returnUrl", "http://localhost:5003" },
+                        { "returnUrl", "http://localhost:5002" },
                         { "scheme", "cookie" },
                         { nameof(impersonate), impersonate.Account}
                     }
             };
-
+            // remove current cookies and call challenge to redirect back to IDS4 
+            // therefor Admin site should get updated cookies with impersonate claim
             await HttpContext.SignOutAsync("Cookies");
             await HttpContext.SignOutAsync("oidc");
             return new ChallengeResult("oidc", props);

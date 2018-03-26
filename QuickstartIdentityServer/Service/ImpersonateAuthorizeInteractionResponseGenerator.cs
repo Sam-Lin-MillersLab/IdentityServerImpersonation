@@ -18,9 +18,11 @@ namespace QuickstartIdentityServer.Service
         public override async Task<InteractionResponse> ProcessInteractionAsync(ValidatedAuthorizeRequest request, ConsentResponse consent = null)
         {
             var acr = request.GetAcrValues();
-         
+            // check if client is from admin and get the impersonate data from acr and put into Claim and update cookies
+            // Question: how to update existing cookie with new claim
             if (request?.Client?.ClientId == "mvc.implicit")
             {
+                var acr = request.GetAcrValues();
                 // // TODO: Do some other behind the scenes check
 
                 // var claims = new[] { new Claim(JwtClaimTypes.Name, "Fred Blogs"), new Claim(JwtClaimTypes.FamilyName, "Blogs"), new
