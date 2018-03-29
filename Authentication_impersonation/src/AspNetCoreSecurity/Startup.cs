@@ -23,16 +23,19 @@ namespace AspNetCoreSecurity
     public class CustomInteractionGenerator : AuthorizeInteractionResponseGenerator
     {
         private readonly IHttpContextAccessor _http;
+        private readonly IUserSession _session;
 
         public CustomInteractionGenerator(
             ISystemClock clock, 
             ILogger<AuthorizeInteractionResponseGenerator> logger, 
             IConsentService consent, 
             IProfileService profile,
-            IHttpContextAccessor http) 
+            IHttpContextAccessor http, 
+            IUserSession session) 
             : base(clock, logger, consent, profile)
         {
             _http = http;
+            _session = session;
         }
 
         protected override async Task<InteractionResponse> ProcessLoginAsync(ValidatedAuthorizeRequest request)
@@ -56,8 +59,12 @@ namespace AspNetCoreSecurity
                             } 
                         }.CreatePrincipal();
 
+                        // this issues a new authN cookie and will generate a new sid
                         await _http.HttpContext.SignInAsync(newUser);
+                        // this updates the current authenticated request object model with that new user
                         request.Subject = newUser;
+                        // this updates the current authenticated request object model with the new session id
+                        request.SessionId = await _session.GetSessionIdAsync();
                     }
                 }
             }
