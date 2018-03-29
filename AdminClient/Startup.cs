@@ -67,12 +67,15 @@ namespace AdminClient
             {
                 options.Cookie.Name = "IDSAdminClient";
             })
+            // ms middleware reads all claims from url and put into cookies
             .AddOpenIdConnect("oidc", options =>
             {
                 options.Authority = IdentityServerUrl;
+                // require ssl
                 options.RequireHttpsMetadata = false;
                 options.ClientId = "mvc.implicit";
                 options.ResponseType = "id_token";
+                // ms has default scope like openid and profile
                 options.Scope.Clear();
                 options.Scope.Add("openid");
                 options.Scope.Add("profile");
